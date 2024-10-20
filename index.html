@@ -1,194 +1,55 @@
-<!-- <!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tirage au Sort</title>
-  </head>
-  <body>
-    <h1>Tirage au Sort</h1>
-
-    <label for="names">Liste des noms (séparés par des virgules) :</label>
-    <input
-      type="text"
-      id="names"
-      placeholder="ex: Paul, Marie, Jean"
-    /><br /><br />
-
-    <label for="subjects">Liste des sujets (séparés par des virgules) :</label>
-    <input
-      type="text"
-      id="subjects"
-      placeholder="ex: Maths, Français, Histoire"
-    /><br /><br />
-
-    <button onclick="startDraw()">Lancer le tirage</button>
-
-    <h2>Résultats :</h2>
-    <ul id="results"></ul>
-
-    <script>
-      function startDraw() {
-        let names = document
-          .getElementById("names")
-          .value.split(",")
-          .map((name) => name.trim());
-        let subjects = document
-          .getElementById("subjects")
-          .value.split(",")
-          .map((subject) => subject.trim());
-
-        if (names.length !== subjects.length) {
-          alert("Le nombre de noms et de sujets doit être identique.");
-          return;
-        }
-
-        let results = document.getElementById("results");
-        results.innerHTML = ""; // Vider les résultats précédents
-
-        while (names.length > 0) {
-          let randomNameIndex = Math.floor(Math.random() * names.length);
-          let randomSubjectIndex = Math.floor(Math.random() * subjects.length);
-
-          let name = names.splice(randomNameIndex, 1)[0];
-          let subject = subjects.splice(randomSubjectIndex, 1)[0];
-
-          let listItem = document.createElement("li");
-          listItem.textContent = `${name} aura le sujet : ${subject}`;
-          results.appendChild(listItem);
-        }
-      }
-    </script>
-  </body>
-</html> -->
 <!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tirage au Sort</title>
-    <style>
-      body {
-        font-family: "Arial", sans-serif;
-        background-color: #f4f4f9;
-        color: #333;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-      }
-
-      h1 {
-        font-size: 2.5rem;
-        color: #4caf50;
-        margin-bottom: 20px;
-      }
-
-      label {
-        font-size: 1.2rem;
-        color: #333;
-      }
-
-      input {
-        padding: 10px;
-        width: 300px;
-        margin-bottom: 20px;
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        font-size: 1rem;
-      }
-
-      button {
-        background-color: #4caf50;
-        color: white;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      button:hover {
-        background-color: #45a049;
-      }
-
-      h2 {
-        font-size: 2rem;
-        color: #333;
-        margin-top: 30px;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-      }
-
-      li {
-        background-color: #eee;
-        margin: 10px 0;
-        padding: 15px;
-        border-radius: 5px;
-        font-size: 1.2rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      input:focus,
-      button:focus {
-        outline: none;
-        border-color: #4caf50;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <h1>Tirage au Sort</h1>
+    <div class="choices">
+      <button id="show-complex-draw">Tirage avec noms et sujets</button>
+      <button id="show-simple-draw">Tirage simple</button>
+    </div>
 
-    <label for="names">Liste des noms (séparés par des virgules) :</label>
-    <input type="text" id="names" placeholder="ex: Paul, Marie, Jean" /><br />
+    <!-- Tirage avec noms et sujets -->
+    <div id="complex-draw" style="display: none">
+      <label for="name-input">Ajouter un nom :</label>
+      <input type="text" id="name-input" placeholder="ex: Paul" />
+      <button id="add-name-btn" class="add-btn">+</button>
+      <ul id="names-list"></ul>
+      <p id="names-error" class="error" style="display: none">
+        La liste de noms ne doit pas être vide.
+      </p>
 
-    <label for="subjects">Liste des sujets (séparés par des virgules) :</label>
-    <input
-      type="text"
-      id="subjects"
-      placeholder="ex: Maths, Français, Histoire"
-    /><br />
+      <label for="subject-input">Ajouter un sujet :</label>
+      <input type="text" id="subject-input" placeholder="ex: Maths" />
+      <button id="add-subject-btn" class="add-btn">+</button>
+      <ul id="subjects-list"></ul>
+      <p id="subjects-error" class="error" style="display: none">
+        La liste de sujets ne doit pas être vide.
+      </p>
 
-    <button onclick="startDraw()">Lancer le tirage</button>
+      <button id="start-complex-draw">Lancer le tirage</button>
+    </div>
 
-    <h2>Résultats :</h2>
+    <!-- Tirage simple -->
+    <div id="simple-draw" style="display: none">
+      <label for="simple-name-input">Ajouter un nom :</label>
+      <input type="text" id="simple-name-input" placeholder="ex: Paul" />
+      <button id="add-simple-name-btn" class="add-btn">+</button>
+      <ul id="simple-names-list"></ul>
+      <p id="simple-names-error" class="error" style="display: none">
+        La liste de noms ne doit pas être vide.
+      </p>
+
+      <button id="start-simple-draw">Lancer le tirage simple</button>
+    </div>
+
+    <h2 id="result-title" style="display: none">Résultat :</h2>
     <ul id="results"></ul>
 
-    <script>
-      function startDraw() {
-        let names = document
-          .getElementById("names")
-          .value.split(",")
-          .map((name) => name.trim());
-        let subjects = document
-          .getElementById("subjects")
-          .value.split(",")
-          .map((subject) => subject.trim());
-
-        if (names.length !== subjects.length) {
-          alert("Le nombre de noms et de sujets doit être identique.");
-          return;
-        }
-
-        let results = document.getElementById("results");
-        results.innerHTML = ""; // Vider les résultats précédents
-
-        while (names.length > 0) {
-          let randomNameIndex = Math.floor(Math.random() * names.length);
-          let randomSubjectIndex = Math.floor(Math.random() * subjects.length);
-
-          let name = names.splice(randomNameIndex, 1)[0];
-          let subject = subjects.splice(randomSubjectIndex, 1)[0];
-
-          let listItem = document.createElement("li");
-          listItem.textContent = `${name} aura le sujet : ${subject}`;
-          results.appendChild(listItem);
-        }
-      }
-    </script>
+    <script src="app.js"></script>
   </body>
 </html>
